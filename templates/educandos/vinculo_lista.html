@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Vínculos | SGS-ASP{% endblock %}
+
+{% block content %}
+<div class="cabecalho-pagina">
+    <div><h1>Vínculos com responsáveis</h1><p>Relações válidas entre educandos e responsáveis existentes.</p></div>
+    {% if perms.educandos.add_vinculoeducandoresponsavel %}<a class="botao" href="{% url 'educandos:vinculo_criar' %}">Novo vínculo</a>{% endif %}
+</div>
+<div class="painel tabela-responsiva">
+    <table>
+        <thead><tr><th>Educando</th><th>Responsável</th><th>Tipo</th><th>Principal</th></tr></thead>
+        <tbody>
+        {% for vinculo in vinculos %}
+            <tr>
+                <td>{{ vinculo.educando }}</td>
+                <td>{{ vinculo.responsavel }}</td>
+                <td>{{ vinculo.get_tipo_vinculo_display }}</td>
+                <td>{{ vinculo.principal|yesno:"Sim,Não" }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="4" class="estado-vazio">Nenhum vínculo cadastrado.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include "partials/paginacao.html" %}
+{% endblock %}

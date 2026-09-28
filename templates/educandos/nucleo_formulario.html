@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastrar núcleo familiar | SGS-ASP{% endblock %}
+
+{% block content %}
+<div class="cabecalho-pagina">
+    <div>
+        <h1>Cadastrar núcleo familiar</h1>
+        <p>RF02 — núcleo e responsáveis são gravados na mesma transação.</p>
+    </div>
+</div>
+
+<form method="post" class="formulario" novalidate>
+    {% csrf_token %}
+    <section class="painel">
+        <h2>Dados do núcleo</h2>
+        {% if form.non_field_errors %}<div class="erros">{{ form.non_field_errors }}</div>{% endif %}
+        {% for field in form %}
+            <div class="campo{% if field.errors %} campo-erro{% endif %}">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+    </section>
+
+    <section class="painel">
+        <h2>Responsáveis</h2>
+        <p>Preencha ao menos um responsável. O segundo formulário é opcional.</p>
+        {{ formset.management_form }}
+        {% if formset.non_form_errors %}<div class="erros">{{ formset.non_form_errors }}</div>{% endif %}
+        <div class="grade-responsaveis">
+            {% for responsavel_form in formset %}
+                <fieldset class="subformulario">
+                    <legend>Responsável {{ forloop.counter }}</legend>
+                    {% for hidden in responsavel_form.hidden_fields %}{{ hidden }}{% endfor %}
+                    {% for field in responsavel_form.visible_fields %}
+                        <div class="campo{% if field.errors %} campo-erro{% endif %}">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
+                    {% endfor %}
+                </fieldset>
+            {% endfor %}
+        </div>
+    </section>
+
+    <div class="acoes-formulario">
+        <a class="botao botao-secundario" href="{% url 'educandos:nucleo_lista' %}">Cancelar</a>
+        <button class="botao" type="submit">Salvar núcleo e responsáveis</button>
+    </div>
+</form>
+{% endblock %}

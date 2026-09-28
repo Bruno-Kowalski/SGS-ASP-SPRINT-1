@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Núcleos familiares | SGS-ASP{% endblock %}
+
+{% block content %}
+<div class="cabecalho-pagina">
+    <div><h1>Núcleos familiares</h1><p>Composição familiar e responsáveis vinculados.</p></div>
+    {% if perms.educandos.add_nucleofamiliar and perms.educandos.add_responsavel %}<a class="botao" href="{% url 'educandos:nucleo_criar' %}">Novo núcleo</a>{% endif %}
+</div>
+<div class="grade-lista">
+    {% for nucleo in nucleos %}
+        <article class="painel">
+            <h2>{{ nucleo.identificacao }}</h2>
+            <p><strong>Endereço:</strong> {{ nucleo.endereco }}</p>
+            <p><strong>Composição:</strong> {{ nucleo.composicao_familiar }}</p>
+            <h3>Responsáveis</h3>
+            <ul>
+                {% for responsavel in nucleo.responsaveis.all %}
+                    <li>{{ responsavel.nome_completo }} — {{ responsavel.parentesco }} — {{ responsavel.contato }}</li>
+                {% empty %}
+                    <li>Nenhum responsável cadastrado.</li>
+                {% endfor %}
+            </ul>
+        </article>
+    {% empty %}
+        <div class="painel estado-vazio">Nenhum núcleo familiar cadastrado.</div>
+    {% endfor %}
+</div>
+{% include "partials/paginacao.html" %}
+{% endblock %}

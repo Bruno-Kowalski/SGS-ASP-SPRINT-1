@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório de desenvolvimento | SGS-ASP{% endblock %}
+
+{% block content %}
+<div class="cabecalho-pagina">
+    <div>
+        <p class="etiqueta">RF30</p>
+        <h1>Relatório de acompanhamento do educando</h1>
+        <p>Consolidação restrita aos dados disponíveis na Sprint 1.</p>
+    </div>
+</div>
+
+<form method="get" class="painel filtro-relatorio" novalidate>
+    {% if form.non_field_errors %}<div class="erros">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="grade-filtros">
+        {% for field in form %}
+            <div class="campo{% if field.errors %} campo-erro{% endif %}">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="acoes-formulario">
+        <a class="botao botao-secundario" href="{% url 'relatorios:desenvolvimento' %}">Limpar</a>
+        <button class="botao" type="submit">Aplicar filtros</button>
+    </div>
+</form>
+
+{% if form.is_valid %}
+<section class="grade-indicadores" aria-label="Indicadores do relatório">
+    <article class="indicador"><strong>{{ indicadores.total_educandos }}</strong><span>No recorte</span></article>
+    <article class="indicador"><strong>{{ indicadores.com_nucleo_familiar }}</strong><span>Com núcleo</span></article>
+    <article class="indicador"><strong>{{ indicadores.com_responsavel }}</strong><span>Com responsável</span></article>
+    <article class="indicador"><strong>{{ indicadores.com_situacao_registrada }}</strong><span>Com situação</span></article>
+</section>
+
+<div class="grade-lista">
+    {% for educando in educandos %}
+        <article class="painel relatorio-item">
+            <div class="relatorio-titulo">
+                <h2>{{ educando.nome_completo }}</h2>
+                <span>Nascimento: {{ educando.data_nascimento|date:"d/m/Y" }}</span>
+            </div>
+            <dl>
+                <dt>Núcleo familiar</dt><dd>{{ educando.nucleo_familiar|default:"Não vinculado" }}</dd>
+                <dt>Responsável principal</dt><dd>{{ educando.responsavel_principal|default:"Não definido" }}</dd>
+            </dl>
+            {% with situacao=educando.situacoes_filtradas.0 %}
+                {% if situacao %}
+                    <div class="situacao-resumo">
+                        <h3>Situação mais recente no recorte — {{ situacao.data_referencia|date:"d/m/Y" }}</h3>
+                        <p><strong>Situação socioeconômica:</strong> {{ situacao.situacao_socioeconomica }}</p>
+                        <p><strong>Benefícios:</strong> {{ situacao.beneficios_sociais }}</p>
+                        <p><strong>Vulnerabilidades:</strong> {{ situacao.vulnerabilidades_identificadas }}</p>
+                    </div>
+                {% else %}
+                    <p class="estado-vazio">Sem situação socioassistencial no recorte.</p>
+                {% endif %}
+            {% endwith %}
+        </article>
+    {% empty %}
+        <div class="painel estado-vazio">Nenhum resultado encontrado para os filtros informados.</div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

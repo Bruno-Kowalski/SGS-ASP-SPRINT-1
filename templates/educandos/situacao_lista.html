@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Situações socioassistenciais | SGS-ASP{% endblock %}
+
+{% block content %}
+<div class="cabecalho-pagina">
+    <div><h1>Situações socioassistenciais</h1><p>Histórico registrado para educandos existentes.</p></div>
+    {% if perms.educandos.add_situacaosocioassistencial %}<a class="botao" href="{% url 'educandos:situacao_criar' %}">Novo registro</a>{% endif %}
+</div>
+<div class="painel tabela-responsiva">
+    <table>
+        <thead><tr><th>Data</th><th>Educando</th><th>Situação socioeconômica</th><th>Registrado por</th></tr></thead>
+        <tbody>
+        {% for situacao in situacoes %}
+            <tr>
+                <td>{{ situacao.data_referencia|date:"d/m/Y" }}</td>
+                <td>{{ situacao.educando }}</td>
+                <td>{{ situacao.situacao_socioeconomica|truncatechars:100 }}</td>
+                <td>{{ situacao.registrado_por|default:"Usuário removido" }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="4" class="estado-vazio">Nenhuma situação registrada.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include "partials/paginacao.html" %}
+{% endblock %}

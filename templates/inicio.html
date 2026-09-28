@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Início | SGS-ASP{% endblock %}
+
+{% block content %}
+<div class="cabecalho-pagina">
+    <div>
+        <p class="etiqueta">Sprint 1</p>
+        <h1>Gestão inicial do educando</h1>
+        <p>RF01, RF02, RF03, RF04 e RF30.</p>
+    </div>
+</div>
+
+<section class="grade-indicadores" aria-label="Indicadores de cadastros">
+    <article class="indicador"><strong>{{ total_educandos }}</strong><span>Educandos</span></article>
+    <article class="indicador"><strong>{{ total_nucleos }}</strong><span>Núcleos</span></article>
+    <article class="indicador"><strong>{{ total_vinculos }}</strong><span>Vínculos</span></article>
+    <article class="indicador"><strong>{{ total_situacoes }}</strong><span>Situações</span></article>
+</section>
+
+<section class="grade-acoes">
+    {% if perms.educandos.add_educando %}
+    <a class="cartao-acao" href="{% url 'educandos:educando_criar' %}">
+        <strong>RF01</strong><span>Cadastrar educando</span>
+    </a>
+    {% endif %}
+    {% if perms.educandos.add_nucleofamiliar and perms.educandos.add_responsavel %}
+    <a class="cartao-acao" href="{% url 'educandos:nucleo_criar' %}">
+        <strong>RF02</strong><span>Cadastrar núcleo familiar</span>
+    </a>
+    {% endif %}
+    {% if perms.educandos.add_vinculoeducandoresponsavel %}
+    <a class="cartao-acao" href="{% url 'educandos:vinculo_criar' %}">
+        <strong>RF03</strong><span>Vincular responsável</span>
+    </a>
+    {% endif %}
+    {% if perms.educandos.add_situacaosocioassistencial %}
+    <a class="cartao-acao" href="{% url 'educandos:situacao_criar' %}">
+        <strong>RF04</strong><span>Registrar situação</span>
+    </a>
+    {% endif %}
+    {% if perms.educandos.view_relatorio_desenvolvimento %}
+    <a class="cartao-acao" href="{% url 'relatorios:desenvolvimento' %}">
+        <strong>RF30</strong><span>Gerar relatório</span>
+    </a>
+    {% endif %}
+</section>
+{% endblock %}

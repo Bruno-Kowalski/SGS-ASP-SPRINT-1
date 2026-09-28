@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Educandos | SGS-ASP{% endblock %}
+
+{% block content %}
+<div class="cabecalho-pagina">
+    <div><h1>Educandos</h1><p>Cadastros pessoais disponíveis para consulta.</p></div>
+    {% if perms.educandos.add_educando %}<a class="botao" href="{% url 'educandos:educando_criar' %}">Novo educando</a>{% endif %}
+</div>
+<div class="painel tabela-responsiva">
+    <table>
+        <thead><tr><th>Nome</th><th>Nascimento</th><th>Contato</th><th>Núcleo</th><th>Responsável principal</th></tr></thead>
+        <tbody>
+        {% for educando in educandos %}
+            <tr>
+                <td>{{ educando.nome_completo }}</td>
+                <td>{{ educando.data_nascimento|date:"d/m/Y" }}</td>
+                <td>{{ educando.contato }}</td>
+                <td>{{ educando.nucleo_familiar|default:"Não vinculado" }}</td>
+                <td>{{ educando.responsavel_principal|default:"Não definido" }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5" class="estado-vazio">Nenhum educando cadastrado.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include "partials/paginacao.html" %}
+{% endblock %}

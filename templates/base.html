@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SGS-ASP{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/sistema.css' %}">
+</head>
+<body>
+    <header class="topo">
+        <div class="container topo-conteudo">
+            <a class="marca" href="{% url 'inicio' %}">
+                <span class="marca-sigla">SGS-ASP</span>
+                <span class="marca-texto">Gestão Socioassistencial</span>
+            </a>
+            {% if user.is_authenticated %}
+                <div class="usuario">
+                    <span>{{ user.get_username }}</span>
+                    <form method="post" action="{% url 'admin:logout' %}">
+                        {% csrf_token %}
+                        <button class="botao-link" type="submit">Sair</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </header>
+
+    {% if user.is_authenticated %}
+        <nav class="navegacao" aria-label="Navegação principal">
+            <div class="container menu">
+                <a href="{% url 'inicio' %}">Início</a>
+                {% if perms.educandos.view_educando %}
+                    <a href="{% url 'educandos:educando_lista' %}">Educandos</a>
+                {% endif %}
+                {% if perms.educandos.view_nucleofamiliar %}
+                    <a href="{% url 'educandos:nucleo_lista' %}">Núcleos familiares</a>
+                {% endif %}
+                {% if perms.educandos.view_vinculoeducandoresponsavel %}
+                    <a href="{% url 'educandos:vinculo_lista' %}">Vínculos</a>
+                {% endif %}
+                {% if perms.educandos.view_situacaosocioassistencial %}
+                    <a href="{% url 'educandos:situacao_lista' %}">Situações</a>
+                {% endif %}
+                {% if perms.educandos.view_relatorio_desenvolvimento %}
+                    <a href="{% url 'relatorios:desenvolvimento' %}">Relatório</a>
+                {% endif %}
+                {% if user.is_staff %}
+                    <a href="{% url 'admin:index' %}">Administração</a>
+                {% endif %}
+            </div>
+        </nav>
+    {% endif %}
+
+    <main class="container conteudo">
+        {% if messages %}
+            <div aria-live="polite">
+                {% for message in messages %}
+                    <div class="mensagem mensagem-{{ message.tags|default:'info' }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="rodape">
+        <div class="container">Sprint 1 — dados de demonstração devem ser fictícios.</div>
+    </footer>
+</body>
+</html>
