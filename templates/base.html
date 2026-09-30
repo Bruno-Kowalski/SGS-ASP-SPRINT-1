@@ -1,70 +1,161 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}SGS-ASP{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/sistema.css' %}">
-</head>
-<body>
-    <header class="topo">
-        <div class="container topo-conteudo">
-            <a class="marca" href="{% url 'inicio' %}">
-                <span class="marca-sigla">SGS-ASP</span>
-                <span class="marca-texto">Gestão Socioassistencial</span>
-            </a>
-            {% if user.is_authenticated %}
-                <div class="usuario">
-                    <span>{{ user.get_username }}</span>
-                    <form method="post" action="{% url 'admin:logout' %}">
-                        {% csrf_token %}
-                        <button class="botao-link" type="submit">Sair</button>
-                    </form>
-                </div>
-            {% endif %}
-        </div>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>
+      {% block title %}
+        SGS-ASP
+      {% endblock %}
+    </title>
+
+    <link rel="stylesheet" href="{% static 'css/sistema.css' %}" />
+  </head>
+
+  <body class="layout-sistema">
+    <a class="atalho-conteudo" href="#conteudo-principal">Ir para o conteúdo principal</a>
 
     {% if user.is_authenticated %}
-        <nav class="navegacao" aria-label="Navegação principal">
-            <div class="container menu">
-                <a href="{% url 'inicio' %}">Início</a>
-                {% if perms.educandos.view_educando %}
-                    <a href="{% url 'educandos:educando_lista' %}">Educandos</a>
-                {% endif %}
-                {% if perms.educandos.view_nucleofamiliar %}
-                    <a href="{% url 'educandos:nucleo_lista' %}">Núcleos familiares</a>
-                {% endif %}
-                {% if perms.educandos.view_vinculoeducandoresponsavel %}
-                    <a href="{% url 'educandos:vinculo_lista' %}">Vínculos</a>
-                {% endif %}
-                {% if perms.educandos.view_situacaosocioassistencial %}
-                    <a href="{% url 'educandos:situacao_lista' %}">Situações</a>
-                {% endif %}
-                {% if perms.educandos.view_relatorio_desenvolvimento %}
-                    <a href="{% url 'relatorios:desenvolvimento' %}">Relatório</a>
-                {% endif %}
-                {% if user.is_staff %}
-                    <a href="{% url 'admin:index' %}">Administração</a>
-                {% endif %}
+      <input class="controle-menu" id="controle-menu" type="checkbox" aria-label="Abrir ou fechar menu principal" />
+
+      {% with url_name=request.resolver_match.url_name namespace=request.resolver_match.namespace %}
+        <aside class="menu-lateral" id="menu-lateral" aria-label="Menu principal">
+          <div class="menu-lateral-topo">
+            <a class="marca-lateral" href="{% url 'inicio' %}">
+              <span class="marca-sigla">SGS-ASP</span>
+
+              <span class="marca-texto">Gestão Socioassistencial</span>
+            </a>
+
+            <label class="botao-fechar-menu" for="controle-menu" aria-label="Fechar menu principal" title="Fechar menu">×</label>
+          </div>
+
+          <nav class="menu-lateral-navegacao" aria-label="Navegação principal">
+            <a class="menu-lateral-link ativo" href="{% url 'inicio' %}">
+              <span class="menu-lateral-icone" aria-hidden="true">🏠</span>
+              <span>Início</span>
+            </a>
+
+            {% if perms.educandos.view_educando %}
+              <a class="menu-lateral-link" href="{% url 'educandos:educando_lista' %}">
+                <span class="menu-lateral-icone" aria-hidden="true">🎓</span>
+                <span>Educandos</span>
+              </a>
+            {% endif %}
+
+            {% if perms.educandos.view_nucleofamiliar %}
+              <a class="menu-lateral-link" href="{% url 'educandos:nucleo_lista' %}">
+                <span class="menu-lateral-icone" aria-hidden="true">👪</span>
+                <span>Núcleos familiares</span>
+              </a>
+            {% endif %}
+
+            {% if perms.educandos.view_vinculoeducandoresponsavel %}
+              <a class="menu-lateral-link" href="{% url 'educandos:vinculo_lista' %}">
+                <span class="menu-lateral-icone" aria-hidden="true">🔗</span>
+                <span>Vínculos</span>
+              </a>
+            {% endif %}
+
+            {% if perms.educandos.view_situacaosocioassistencial %}
+              <a class="menu-lateral-link" href="{% url 'educandos:situacao_lista' %}">
+                <span class="menu-lateral-icone" aria-hidden="true">📋</span>
+                <span>Situações</span>
+              </a>
+            {% endif %}
+
+            {% if perms.educandos.view_relatorio_desenvolvimento %}
+              <a class="menu-lateral-link" href="{% url 'relatorios:desenvolvimento' %}">
+                <span class="menu-lateral-icone" aria-hidden="true">📊</span>
+                <span>Relatório</span>
+              </a>
+            {% endif %}
+
+            {% if user.is_staff %}
+              <a class="menu-lateral-link" href="{% url 'admin:index' %}">
+                <span class="menu-lateral-icone" aria-hidden="true">⚙️</span>
+                <span>Administração</span>
+              </a>
+            {% endif %}
+          </nav>
+          <div class="menu-lateral-usuario">
+            <div class="usuario-identificacao">
+              <span class="usuario-avatar" aria-hidden="true">{{ user.get_username|first|upper }}</span>
+
+              <span class="usuario-dados">
+                <strong>{{ user.get_username }}</strong>
+                <small>Sessão ativa</small>
+              </span>
             </div>
-        </nav>
+
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button class="botao-sair" type="submit">Sair do sistema</button>
+            </form>
+          </div>
+        </aside>
+      {% endwith %}
+
+      <label class="menu-sobreposicao" for="controle-menu" aria-label="Fechar menu principal"></label>
     {% endif %}
 
-    <main class="container conteudo">
-        {% if messages %}
-            <div aria-live="polite">
-                {% for message in messages %}
-                    <div class="mensagem mensagem-{{ message.tags|default:'info' }}">{{ message }}</div>
-                {% endfor %}
-            </div>
-        {% endif %}
-        {% block content %}{% endblock %}
-    </main>
+    <div class="area-principal">
+      <header class="topo">
+        <div class="topo-conteudo">
+          {% if user.is_authenticated %}
+            <label class="botao-menu" for="controle-menu" aria-label="Abrir menu principal" title="Abrir menu">
+              <span></span>
+              <span></span>
+              <span></span>
+            </label>
+          {% endif %}
 
-    <footer class="rodape">
-        <div class="container">Sprint 1 — dados de demonstração devem ser fictícios.</div>
-    </footer>
-</body>
+          <div class="topo-identificacao">
+            <span class="topo-titulo">Associação Ação Social do Planalto</span>
+
+            <span class="topo-subtitulo">Sistema de Gestão Socioassistencial</span>
+          </div>
+
+          {% if user.is_authenticated %}
+            <div class="usuario-topo">
+              <span class="usuario-avatar" aria-hidden="true">{{ user.get_username|first|upper }}</span>
+
+              <span class="usuario-dados">
+                <strong>{{ user.get_username }}</strong>
+                <small>Usuário autenticado</small>
+              </span>
+            </div>
+          {% else %}
+            <a class="marca" href="{% url 'inicio' %}"><span class="marca-sigla">SGS-ASP</span></a>
+          {% endif %}
+        </div>
+      </header>
+
+      <main class="container conteudo" id="conteudo-principal">
+        {% if messages %}
+          <div class="lista-mensagens" aria-live="polite" aria-atomic="true">
+            {% for message in messages %}
+              <div class="mensagem mensagem-{{ message.tags|default:'info' }}" role="status">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% block content %}
+
+        {% endblock %}
+      </main>
+
+      <footer class="rodape">
+        <div class="container rodape-conteudo">
+          <span>SGS-ASP — Sprint 1</span>
+
+          <span>Utilize somente dados fictícios para demonstração.</span>
+        </div>
+      </footer>
+    </div>
+  </body>
 </html>

@@ -1,48 +1,210 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}Início | SGS-ASP{% endblock %}
+{% block title %}
+  Início | SGS-ASP
+{% endblock %}
 
 {% block content %}
-<div class="cabecalho-pagina">
+  <header class="cabecalho-pagina">
     <div>
-        <p class="etiqueta">Sprint 1</p>
-        <h1>Gestão inicial do educando</h1>
-        <p>RF01, RF02, RF03, RF04 e RF30.</p>
+      
+      <h1>Visão geral</h1>
+
+      <p>
+        Acompanhe os principais dados cadastrados no sistema.
+      </p>
     </div>
-</div>
+  </header>
 
-<section class="grade-indicadores" aria-label="Indicadores de cadastros">
-    <article class="indicador"><strong>{{ total_educandos }}</strong><span>Educandos</span></article>
-    <article class="indicador"><strong>{{ total_nucleos }}</strong><span>Núcleos</span></article>
-    <article class="indicador"><strong>{{ total_vinculos }}</strong><span>Vínculos</span></article>
-    <article class="indicador"><strong>{{ total_situacoes }}</strong><span>Situações</span></article>
-</section>
+  <section
+    class="secao-pagina"
+    aria-labelledby="titulo-indicadores"
+  >
+    <div class="secao-cabecalho">
+      <div>
+        <h2 id="titulo-indicadores">
+          Indicadores gerais
+        </h2>
 
-<section class="grade-acoes">
-    {% if perms.educandos.add_educando %}
-    <a class="cartao-acao" href="{% url 'educandos:educando_criar' %}">
-        <strong>RF01</strong><span>Cadastrar educando</span>
-    </a>
-    {% endif %}
-    {% if perms.educandos.add_nucleofamiliar and perms.educandos.add_responsavel %}
-    <a class="cartao-acao" href="{% url 'educandos:nucleo_criar' %}">
-        <strong>RF02</strong><span>Cadastrar núcleo familiar</span>
-    </a>
-    {% endif %}
-    {% if perms.educandos.add_vinculoeducandoresponsavel %}
-    <a class="cartao-acao" href="{% url 'educandos:vinculo_criar' %}">
-        <strong>RF03</strong><span>Vincular responsável</span>
-    </a>
-    {% endif %}
-    {% if perms.educandos.add_situacaosocioassistencial %}
-    <a class="cartao-acao" href="{% url 'educandos:situacao_criar' %}">
-        <strong>RF04</strong><span>Registrar situação</span>
-    </a>
-    {% endif %}
-    {% if perms.educandos.view_relatorio_desenvolvimento %}
-    <a class="cartao-acao" href="{% url 'relatorios:desenvolvimento' %}">
-        <strong>RF30</strong><span>Gerar relatório</span>
-    </a>
-    {% endif %}
-</section>
+        <p>
+          Resumo dos registros disponíveis no sistema.
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="grade-indicadores"
+      aria-label="Indicadores de cadastros"
+    >
+      <article class="indicador">
+        
+        <strong>{{ total_educandos }}</strong>
+
+        <span class="indicador-descricao">
+          Educandos cadastrados
+        </span>
+      </article>
+
+      <article class="indicador">
+        
+        <strong>{{ total_nucleos }}</strong>
+
+        <span class="indicador-descricao">
+          Núcleos familiares
+        </span>
+      </article>
+
+      <article class="indicador">
+        
+        <strong>{{ total_vinculos }}</strong>
+
+        <span class="indicador-descricao">
+          Vínculos registrados
+        </span>
+      </article>
+
+      <article class="indicador">
+        
+        <strong>{{ total_situacoes }}</strong>
+
+        <span class="indicador-descricao">
+          Situações registradas
+        </span>
+      </article>
+    </div>
+  </section>
+
+  <section
+    class="secao-pagina"
+    aria-labelledby="titulo-acoes"
+  >
+    <div class="secao-cabecalho">
+      <div>
+        <h2 id="titulo-acoes">
+          Ações rápidas
+        </h2>
+
+        <p>
+          Escolha uma funcionalidade para iniciar um cadastro.
+        </p>
+      </div>
+    </div>
+
+    <div class="grade-acoes">
+      {% if perms.educandos.add_educando %}
+        <a
+          class="cartao-acao"
+          href="{% url 'educandos:educando_criar' %}"
+        >
+          
+          <span class="cartao-acao-conteudo">
+            <strong>Cadastrar educando</strong>
+
+            <small>
+              Adicionar as informações pessoais do educando.
+            </small>
+          </span>
+
+          <span
+            class="cartao-acao-seta"
+            aria-hidden="true"
+          >
+            →
+          </span>
+        </a>
+      {% endif %}
+
+      {% if perms.educandos.add_nucleofamiliar and perms.educandos.add_responsavel %}
+        <a
+          class="cartao-acao"
+          href="{% url 'educandos:nucleo_criar' %}"
+        >
+          
+          <span class="cartao-acao-conteudo">
+            <strong>Cadastrar núcleo familiar</strong>
+
+            <small>
+              Registrar o núcleo e seus responsáveis.
+            </small>
+          </span>
+
+          <span
+            class="cartao-acao-seta"
+            aria-hidden="true"
+          >
+            →
+          </span>
+        </a>
+      {% endif %}
+
+      {% if perms.educandos.add_vinculoeducandoresponsavel %}
+        <a
+          class="cartao-acao"
+          href="{% url 'educandos:vinculo_criar' %}"
+        >
+          
+          <span class="cartao-acao-conteudo">
+            <strong>Vincular responsável</strong>
+
+            <small>
+              Relacionar um educando a um responsável.
+            </small>
+          </span>
+
+          <span
+            class="cartao-acao-seta"
+            aria-hidden="true"
+          >
+            →
+          </span>
+        </a>
+      {% endif %}
+
+      {% if perms.educandos.add_situacaosocioassistencial %}
+        <a
+          class="cartao-acao"
+          href="{% url 'educandos:situacao_criar' %}"
+        >
+          
+          <span class="cartao-acao-conteudo">
+            <strong>Registrar situação</strong>
+
+            <small>
+              Adicionar uma situação socioassistencial.
+            </small>
+          </span>
+
+          <span
+            class="cartao-acao-seta"
+            aria-hidden="true"
+          >
+            →
+          </span>
+        </a>
+      {% endif %}
+
+      {% if perms.educandos.view_relatorio_desenvolvimento %}
+        <a
+          class="cartao-acao"
+          href="{% url 'relatorios:desenvolvimento' %}"
+        >
+          
+          <span class="cartao-acao-conteudo">
+            <strong>Gerar relatório</strong>
+
+            <small>
+              Consultar os indicadores de acompanhamento.
+            </small>
+          </span>
+
+          <span
+            class="cartao-acao-seta"
+            aria-hidden="true"
+          >
+            →
+          </span>
+        </a>
+      {% endif %}
+    </div>
+  </section>
 {% endblock %}

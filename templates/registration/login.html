@@ -1,0 +1,111 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Entrar | SGS-ASP</title>
+
+    <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+  </head>
+
+  <body class="pagina-login">
+    <main class="login-container">
+      <section class="login-identidade" aria-label="Identidade da ASP">
+        <div class="login-decoracao login-decoracao-superior"></div>
+        <div class="login-decoracao login-decoracao-inferior"></div>
+
+        <div class="login-identidade-conteudo">
+          <div class="logo-moldura">
+            <img
+              class="logo-asp"
+              src="{% static 'img/logo-asp-tratada.png' %}"
+              alt="Logo da Associação Ação Social do Planalto"
+            />
+          </div>
+
+          <div class="login-identidade-texto">
+            <h2>Associação Ação Social do Planalto</h2>
+            <p>Transformando vidas por meio da assistência social.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="login-formulario">
+        <div class="login-formulario-conteudo">
+          <span class="login-etiqueta">SGS-ASP</span>
+
+          <h1>Bem-vindo</h1>
+
+          <p class="login-descricao">
+            Entre com suas credenciais para acessar o Sistema de Gestão
+            Socioassistencial.
+          </p>
+
+          {% if form.non_field_errors %}
+            <div class="alerta-login" role="alert">
+              {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <form
+            class="formulario-login"
+            method="post"
+            action="{% url 'login' %}"
+          >
+            {% csrf_token %}
+
+            {% if next %}
+              <input type="hidden" name="next" value="{{ next }}" />
+            {% endif %}
+
+            <div class="campo-login">
+              <label for="{{ form.username.id_for_label }}">
+                Usuário
+              </label>
+
+              {{ form.username }}
+
+              {% if form.username.errors %}
+                <div class="erro-campo">
+                  {% for error in form.username.errors %}
+                    <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="campo-login">
+              <label for="{{ form.password.id_for_label }}">
+                Senha
+              </label>
+
+              {{ form.password }}
+
+              {% if form.password.errors %}
+                <div class="erro-campo">
+                  {% for error in form.password.errors %}
+                    <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <button class="botao-entrar" type="submit">
+              Entrar no sistema
+            </button>
+          </form>
+
+          <p class="login-ajuda">
+            Em caso de problemas com o acesso, procure o administrador do
+            sistema.
+          </p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
